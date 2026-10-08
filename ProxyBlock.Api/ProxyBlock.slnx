@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ProxyBlock.Api/ProxyBlock.Api.csproj" />
+  <Project Path="ProxyBlock.App/ProxyBlock.App.csproj" />
+</Solution>
