@@ -7,6 +7,7 @@ using ProxyBlock.Api.Data;
 using ProxyBlock.Api.DTOs;
 using ProxyBlock.Api.Models;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ProxyBlock.Api.Controllers;
 
@@ -20,12 +21,22 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest req)
     {
+        if (string.IsNullOrWhiteSpace(req.Email) ||
+            !req.Email.EndsWith(".edu.pk", StringComparison.OrdinalIgnoreCase))
+            return BadRequest("Please use your university email ending with .edu.pk.");
+
         if (await _db.Users.AnyAsync(u => u.Email == req.Email))
             return BadRequest("Email already registered.");
 
-        if (req.Role == UserRole.Student &&
-            await _db.Users.AnyAsync(u => u.RollNumber == req.RollNumber))
-            return BadRequest("Roll number already registered.");
+        if (req.Role == UserRole.Student)
+        {
+            var roll = req.RollNumber?.Trim().ToUpperInvariant() ?? "";
+            if (!Regex.IsMatch(roll, @"^[FS]\d{2}[A-Z]+\d[A-Z]\d+$"))
+                return BadRequest("Roll number must follow the university pattern (e.g. F25BARIN1M01379).");
+
+            if (await _db.Users.AnyAsync(u => u.RollNumber == req.RollNumber))
+                return BadRequest("Roll number already registered.");
+        }
 
         var user = new User
         {

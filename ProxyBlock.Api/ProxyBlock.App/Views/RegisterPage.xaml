@@ -8,8 +8,8 @@
             <Label Text="Create account" FontSize="28" FontAttributes="Bold"
                    HorizontalOptions="Center" />
             <Entry x:Name="FullNameEntry" Placeholder="Full name" />
-            <Entry x:Name="RollNumberEntry" Placeholder="Roll number" />
-            <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email" />
+            <Entry x:Name="RollNumberEntry" Placeholder="Write your complete University Roll Number" />
+            <Entry x:Name="EmailEntry" Placeholder="Write your complete University Email" Keyboard="Email" />
             <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" />
             <Label Text="Gender" FontAttributes="Bold" />
             <Picker x:Name="GenderPicker" Title="Select gender">

@@ -1,4 +1,5 @@
 ﻿using ProxyBlock.App.Services;
+using System.Text.RegularExpressions;
 
 namespace ProxyBlock.App.Views;
 
@@ -21,6 +22,11 @@ public partial class RegisterPage : ContentPage
                 ErrorLabel.Text = "Please fill all fields.";
                 return;
             }
+            if (!EmailEntry.Text.Trim().EndsWith(".edu.pk", StringComparison.OrdinalIgnoreCase))
+            {
+                ErrorLabel.Text = "Use your university email ending with .edu.pk.";
+                return;
+            }
             if (GenderPicker.SelectedIndex < 0)
             {
                 ErrorLabel.Text = "Please select Male or Female.";
@@ -30,6 +36,15 @@ public partial class RegisterPage : ContentPage
             {
                 ErrorLabel.Text = "Please select Student or Teacher.";
                 return;
+            }
+            if (RolePicker.SelectedIndex == 0) // Student
+            {
+                var roll = RollNumberEntry.Text?.Trim().ToUpperInvariant() ?? "";
+                if (!Regex.IsMatch(roll, @"^[FS]\d{2}[A-Z]+\d[A-Z]\d+$"))
+                {
+                    ErrorLabel.Text = "Roll number must follow the university pattern (e.g. F25BARIN1M01379).";
+                    return;
+                }
             }
 
             var api = new ApiService();
