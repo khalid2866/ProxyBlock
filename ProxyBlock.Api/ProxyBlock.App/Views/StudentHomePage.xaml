@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProxyBlock.App.Views.StudentHomePage"
+             Title="Student">
+    <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
+        <Label Text="Mark attendance" FontSize="24" FontAttributes="Bold"
+               HorizontalOptions="Center" />
+        <Entry x:Name="SessionEntry" Placeholder="Session ID" Keyboard="Numeric" />
+        <Entry x:Name="TokenEntry" Placeholder="QR token" />
+        <Button Text="Mark present" Clicked="OnMarkClicked" />
+        <Label x:Name="ResultLabel" FontSize="18" TextColor="Green"
+               HorizontalOptions="Center" />
+        <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

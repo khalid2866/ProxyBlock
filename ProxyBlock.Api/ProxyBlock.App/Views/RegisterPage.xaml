@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProxyBlock.App.Views.RegisterPage"
+             Title="Register">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
+            <Label Text="Create account" FontSize="28" FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Entry x:Name="FullNameEntry" Placeholder="Full name" />
+            <Entry x:Name="RollNumberEntry" Placeholder="Roll number" />
+            <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email" />
+            <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" />
+            <Label Text="Gender" FontAttributes="Bold" />
+            <Picker x:Name="GenderPicker" Title="Select gender">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Male</x:String>
+                        <x:String>Female</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Label Text="Role" FontAttributes="Bold" />
+            <Picker x:Name="RolePicker" Title="Select role">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Student</x:String>
+                        <x:String>Teacher</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Button Text="Register" Clicked="OnRegisterClicked" />
+            <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
