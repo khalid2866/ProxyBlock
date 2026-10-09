@@ -37,7 +37,6 @@ public partial class LoginPage : ContentPage
             ErrorLabel.Text = ex.Message;
         }
     }
-
     private async void OnRegisterClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new RegisterPage());
