@@ -62,8 +62,8 @@ public partial class RegisterPage : ContentPage
                 return;
             }
 
-            await DisplayAlert("Done", "Account created. Please login.", "OK");
-            await Navigation.PopAsync();
+            await Navigation.PushAsync(new OtpPage(EmailEntry.Text.Trim()));
+
         }
         catch (Exception ex)
         {

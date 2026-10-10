@@ -23,9 +23,19 @@ public class SessionsController : ControllerBase
     [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Start(StartSessionRequest req)
     {
+        int? sectionId = null;
+        if (req.SectionId.HasValue)
+        {
+            var section = await _db.Sections
+                .FirstOrDefaultAsync(s => s.Id == req.SectionId.Value && s.TeacherId == CurrentUserId);
+            if (section == null) return BadRequest("Section not found.");
+            sectionId = section.Id;
+        }
+
         var session = new AttendanceSession
         {
             TeacherId = CurrentUserId,
+            CourseSectionId = sectionId,
             CourseName = req.CourseName,
             Latitude = req.Latitude,
             Longitude = req.Longitude,

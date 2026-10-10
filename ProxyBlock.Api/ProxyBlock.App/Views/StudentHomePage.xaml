@@ -3,14 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProxyBlock.App.Views.StudentHomePage"
              Title="Student">
-    <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
-        <Label Text="Mark attendance" FontSize="24" FontAttributes="Bold"
-               HorizontalOptions="Center" />
-        <Entry x:Name="SessionEntry" Placeholder="Session ID" Keyboard="Numeric" />
-        <Entry x:Name="TokenEntry" Placeholder="QR token" />
-        <Button Text="Mark present" Clicked="OnMarkClicked" />
-        <Label x:Name="ResultLabel" FontSize="18" TextColor="Green"
-               HorizontalOptions="Center" />
-        <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Spacing="12" Padding="20">
+
+            <Label Text="My classes" FontSize="22" FontAttributes="Bold" />
+            <CollectionView x:Name="SectionsList" HeightRequest="140">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,4">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding CourseCode}" FontAttributes="Bold" FontSize="16" />
+                                <Label Text="{Binding SectionName}" />
+                                <Label Text="{Binding TeacherName, StringFormat='Teacher: {0}'}" FontSize="12" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <BoxView HeightRequest="1" Color="LightGray" />
+
+            <Label Text="Mark attendance" FontSize="22" FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Button Text="Scan QR" Clicked="OnScanClicked" />
+            <Entry x:Name="SessionEntry" Placeholder="Session ID" Keyboard="Numeric" />
+            <Entry x:Name="TokenEntry" Placeholder="QR token" />
+            <Button Text="Mark present" Clicked="OnMarkClicked" />
+            <Label x:Name="ResultLabel" FontSize="18" TextColor="Green"
+                   HorizontalOptions="Center" />
+            <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

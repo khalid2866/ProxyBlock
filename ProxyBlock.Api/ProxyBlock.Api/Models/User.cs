@@ -9,6 +9,7 @@ public class User
     public string PasswordHash { get; set; } = "";
     public Gender Gender { get; set; }
     public UserRole Role { get; set; }
+    public bool IsEmailVerified { get; set; } = false;
     public string? PhotoPath { get; set; }
     public string? DeviceId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

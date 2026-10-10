@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProxyBlock.App.Views.OtpPage"
+             Title="Verify email">
+    <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
+        <Label Text="Check your university email" FontSize="22" FontAttributes="Bold"
+               HorizontalOptions="Center" />
+        <Label x:Name="InfoLabel" HorizontalOptions="Center" />
+        <Entry x:Name="CodeEntry" Placeholder="6-digit code" Keyboard="Numeric" MaxLength="6"
+               HorizontalTextAlignment="Center" FontSize="24" />
+        <Button Text="Verify" Clicked="OnVerifyClicked" />
+        <Button Text="Resend code" Clicked="OnResendClicked" BackgroundColor="Gray" />
+        <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

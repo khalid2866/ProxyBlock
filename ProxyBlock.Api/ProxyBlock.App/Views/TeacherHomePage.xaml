@@ -1,18 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
              x:Class="ProxyBlock.App.Views.TeacherHomePage"
              Title="Teacher">
-    <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
-        <Label Text="Attendance session" FontSize="24" FontAttributes="Bold"
-               HorizontalOptions="Center" />
-        <Entry x:Name="CourseEntry" Placeholder="Course name (e.g. SCD)" />
-        <Button x:Name="StartButton" Text="Start session" Clicked="OnStartClicked" />
-        <Label x:Name="TokenLabel" FontSize="48" FontAttributes="Bold"
-               HorizontalOptions="Center" />
-        <Label x:Name="InfoLabel" HorizontalOptions="Center" />
-        <Button x:Name="EndButton" Text="End session" Clicked="OnEndClicked"
+    <ScrollView>
+        <VerticalStackLayout Spacing="12" Padding="20">
+
+            <Label Text="My classes" FontSize="22" FontAttributes="Bold" />
+            <CollectionView x:Name="SectionsList" SelectionMode="Single"
+                            SelectionChanged="OnSectionSelected" HeightRequest="160">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,4">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding CourseCode}" FontAttributes="Bold" FontSize="16" />
+                                <Label Text="{Binding CourseName}" FontSize="14" />
+                                <Label Text="{Binding SectionName}" />
+                                <Label Text="{Binding StudentCount, StringFormat='{0} students'}" FontSize="12" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label x:Name="SelectedLabel" Text="No class selected" FontSize="13" TextColor="Gray" />
+
+            <BoxView HeightRequest="1" Color="LightGray" />
+
+            <Label Text="Create new class" FontSize="18" FontAttributes="Bold" />
+            <Entry x:Name="CourseNameEntry" Placeholder="Course name (e.g. Software Construction)" />
+            <Entry x:Name="CourseCodeEntry" Placeholder="Course code (e.g. SCD)" />
+            <Entry x:Name="SectionNameEntry" Placeholder="Section (e.g. 1M)" />
+            <Button Text="Create class" Clicked="OnCreateSectionClicked" />
+            <Button Text="Upload class list (.xlsx)"
+                    Clicked="OnUploadRosterClicked"
+                    BackgroundColor="#5B5BD6"
+                    TextColor="White" />
+
+            <BoxView HeightRequest="1" Color="LightGray" />
+
+            <Label Text="Attendance session" FontSize="18" FontAttributes="Bold" />
+            <Button x:Name="StartButton" Text="Start session for selected class" Clicked="OnStartClicked" />
+            <zxing:BarcodeGeneratorView x:Name="QrView" Format="QrCode"
+                WidthRequest="250" HeightRequest="250" HorizontalOptions="Center"
                 IsVisible="False" />
-        <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
-    </VerticalStackLayout>
+            <Label x:Name="TokenLabel" FontSize="28" FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label x:Name="InfoLabel" HorizontalOptions="Center" />
+            <Button x:Name="EndButton" Text="End session" Clicked="OnEndClicked"
+                    IsVisible="False" />
+
+            <BoxView HeightRequest="1" Color="LightGray" />
+
+            <Label Text="Add student by roll number" FontSize="16" FontAttributes="Bold" />
+            <HorizontalStackLayout Spacing="10">
+                <Entry x:Name="RollEntry" Placeholder="e.g. F24BSEEN1M01065"
+                       HorizontalOptions="FillAndExpand" />
+                <Button Text="Add" Clicked="OnAddStudentClicked" />
+            </HorizontalStackLayout>
+
+            <Label Text="Live roster" FontSize="16" FontAttributes="Bold" />
+            <Label x:Name="RosterSummaryLabel" />
+            <Button x:Name="RosterButton" Text="Refresh roster" Clicked="OnRosterClicked"
+                    IsVisible="False" />
+            <CollectionView x:Name="RosterList" HeightRequest="220">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <HorizontalStackLayout Padding="6" Spacing="10">
+                            <Label Text="{Binding FullName}" HorizontalOptions="StartAndExpand" />
+                            <Label Text="{Binding RollNumber}" FontSize="12" TextColor="Gray"
+                                   VerticalOptions="Center" />
+                            <Label FontAttributes="Bold" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Present}" Value="True">
+                                        <Setter Property="Text" Value="Present" />
+                                        <Setter Property="TextColor" Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Present}" Value="False">
+                                        <Setter Property="Text" Value="Absent" />
+                                        <Setter Property="TextColor" Value="Red" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label x:Name="ErrorLabel" TextColor="Red" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

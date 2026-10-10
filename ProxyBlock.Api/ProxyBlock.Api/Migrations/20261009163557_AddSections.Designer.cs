@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProxyBlock.Api.Data;
 
@@ -11,9 +12,11 @@ using ProxyBlock.Api.Data;
 namespace ProxyBlock.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261009163557_AddSections")]
+    partial class AddSections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,6 +147,10 @@ namespace ProxyBlock.Api.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("JoinCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("SectionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -155,36 +162,12 @@ namespace ProxyBlock.Api.Migrations
 
                     b.HasIndex("CourseId");
 
+                    b.HasIndex("JoinCode")
+                        .IsUnique();
+
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Sections");
-                });
-
-            modelBuilder.Entity("ProxyBlock.Api.Models.EmailOtp", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailOtps");
                 });
 
             modelBuilder.Entity("ProxyBlock.Api.Models.Enrollment", b =>
@@ -211,31 +194,6 @@ namespace ProxyBlock.Api.Migrations
                     b.ToTable("Enrollments");
                 });
 
-            modelBuilder.Entity("ProxyBlock.Api.Models.PendingEnrollment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseSectionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RollNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseSectionId");
-
-                    b.ToTable("PendingEnrollments");
-                });
-
             modelBuilder.Entity("ProxyBlock.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -260,9 +218,6 @@ namespace ProxyBlock.Api.Migrations
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsEmailVerified")
-                        .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -355,17 +310,6 @@ namespace ProxyBlock.Api.Migrations
                     b.Navigation("CourseSection");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("ProxyBlock.Api.Models.PendingEnrollment", b =>
-                {
-                    b.HasOne("ProxyBlock.Api.Models.CourseSection", "CourseSection")
-                        .WithMany()
-                        .HasForeignKey("CourseSectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CourseSection");
                 });
 
             modelBuilder.Entity("ProxyBlock.Api.Models.AttendanceSession", b =>

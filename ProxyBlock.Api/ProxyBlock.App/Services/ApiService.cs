@@ -24,6 +24,36 @@ public class TokenResult
     public DateTime TokenExpiresAt { get; set; }
 }
 
+public class SectionItem
+{
+    public int Id { get; set; }
+    public string CourseName { get; set; } = "";
+    public string CourseCode { get; set; } = "";
+    public string SectionName { get; set; } = "";
+    public int StudentCount { get; set; }
+    public string TeacherName { get; set; } = "";
+}
+
+public class CreateSectionResult
+{
+    public int Id { get; set; }
+}
+
+public class RosterItem
+{
+    public int Id { get; set; }
+    public string FullName { get; set; } = "";
+    public string RollNumber { get; set; } = "";
+    public bool Present { get; set; }
+}
+
+public class RosterResult
+{
+    public int Total { get; set; }
+    public int Present { get; set; }
+    public List<RosterItem> Roster { get; set; } = new();
+}
+
 public class ApiService
 {
     private readonly HttpClient _http;
@@ -66,10 +96,10 @@ public class ApiService
         return res.IsSuccessStatusCode;
     }
 
-    public async Task<SessionResult?> StartSessionAsync(string courseName)
+    public async Task<SessionResult?> StartSessionAsync(string courseName, int? sectionId = null)
     {
         var res = await _http.PostAsJsonAsync("/api/Sessions/start",
-            new { courseName, latitude = 29.39, longitude = 71.69 });
+            new { courseName, latitude = 29.39, longitude = 71.69, sectionId });
         if (!res.IsSuccessStatusCode) return null;
         return await res.Content.ReadFromJsonAsync<SessionResult>();
     }
@@ -91,6 +121,71 @@ public class ApiService
     {
         var res = await _http.PostAsJsonAsync("/api/Attendance/mark",
             new { sessionId, token });
+        return (res.IsSuccessStatusCode, await res.Content.ReadAsStringAsync());
+    }
+
+    // ----- Class sections -----
+
+    public async Task<(bool ok, string message, int sectionId)> CreateSectionAsync(
+        string courseName, string courseCode, string sectionName)
+    {
+        var res = await _http.PostAsJsonAsync("/api/Sections",
+            new { courseName, courseCode, sectionName });
+        if (!res.IsSuccessStatusCode)
+            return (false, await res.Content.ReadAsStringAsync(), 0);
+        var created = await res.Content.ReadFromJsonAsync<CreateSectionResult>();
+        return (true, "Section created.", created?.Id ?? 0);
+    }
+
+    public async Task<(bool ok, string message)> UploadRosterAsync(
+        string sectionName, string courseName, string courseCode,
+        Stream fileStream, string fileName)
+    {
+        using var form = new MultipartFormDataContent();
+        form.Add(new StringContent(sectionName), "sectionName");
+        form.Add(new StringContent(courseName), "courseName");
+        form.Add(new StringContent(courseCode), "courseCode");
+        form.Add(new StreamContent(fileStream), "file", fileName);
+        var res = await _http.PostAsync("api/Sections/upload-roster", form);
+        return (res.IsSuccessStatusCode, await res.Content.ReadAsStringAsync());
+    }
+
+    public async Task<List<SectionItem>> GetMySectionsAsync()
+    {
+        return await _http.GetFromJsonAsync<List<SectionItem>>("/api/Sections/mine")
+            ?? new();
+    }
+
+    public async Task<List<SectionItem>> GetEnrolledSectionsAsync()
+    {
+        return await _http.GetFromJsonAsync<List<SectionItem>>("/api/Sections/enrolled")
+            ?? new();
+    }
+
+    public async Task<(bool ok, string message)> AddStudentAsync(int sectionId, string rollNumber)
+    {
+        var res = await _http.PostAsJsonAsync($"/api/Sections/{sectionId}/students",
+            new { rollNumber });
+        return (res.IsSuccessStatusCode, await res.Content.ReadAsStringAsync());
+    }
+
+    public async Task<RosterResult?> GetRosterAsync(int sectionId, int sessionId)
+    {
+        return await _http.GetFromJsonAsync<RosterResult>(
+            $"/api/Sections/{sectionId}/roster?sessionId={sessionId}");
+    }
+
+    public async Task<(bool ok, string message)> VerifyOtpAsync(string email, string code)
+    {
+        var res = await _http.PostAsJsonAsync("/api/Auth/verify-otp",
+            new { email, code });
+        return (res.IsSuccessStatusCode, await res.Content.ReadAsStringAsync());
+    }
+
+    public async Task<(bool ok, string message)> ResendOtpAsync(string email)
+    {
+        var res = await _http.PostAsJsonAsync("/api/Auth/resend-otp",
+            new { email });
         return (res.IsSuccessStatusCode, await res.Content.ReadAsStringAsync());
     }
 

@@ -26,6 +26,15 @@ public class AttendanceController : ControllerBase
         if (session == null || !session.IsActive)
             return BadRequest("Session not found or ended.");
 
+        if (session.CourseSectionId.HasValue)
+        {
+            var enrolled = await _db.Enrollments.AnyAsync(e =>
+                e.CourseSectionId == session.CourseSectionId.Value &&
+                e.StudentId == CurrentUserId);
+            if (!enrolled)
+                return BadRequest("You are not enrolled in this class.");
+        }
+
         if (DateTime.UtcNow > session.TokenExpiresAt ||
             session.CurrentToken != req.Token)
             return BadRequest("Invalid or expired token. Scan the current QR.");

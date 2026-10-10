@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "ProxyBlock.Api\\ProxyBlock.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ProxyBlock.App\\ProxyBlock.App.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

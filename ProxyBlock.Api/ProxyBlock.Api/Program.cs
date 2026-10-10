@@ -3,11 +3,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using ProxyBlock.Api.Data;
+using ProxyBlock.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
+builder.Services.AddScoped<EmailService>();
 
 // Add services to the container.
 
